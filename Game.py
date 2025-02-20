@@ -22,6 +22,11 @@ class Game:
     
     square_group = game.sprite.Group()
     squares = []
+    turn = 'o'
+    
+    # Board
+    size = 9
+    board = [' ' for _ in range(size+1)]
     
     num = 0 # Gus: I think i'll name it better later
     
@@ -36,8 +41,8 @@ class Game:
         self.background = game.image.load('bg.png')
         
         # Set window dimensions
-        self.WIDTH = 500
-        self.HEIGHT = 500
+        self.WIDTH = 1000
+        self.HEIGHT = 1000
         
         # Define window elements
         self.window = game.display.set_mode((self.WIDTH,self.HEIGHT))
@@ -49,7 +54,7 @@ class Game:
         
         for y in range (1,4):
             for x in range(1,4):
-                tempSquare = Square(x,y,self.num)
+                tempSquare = Square(x,y,self.num,self.blank_image)
                 self.square_group.add(tempSquare)
                 self.squares.append(tempSquare)
         
@@ -58,12 +63,20 @@ class Game:
     # Run game
     def run(self):
         self.is_running = True
-        while isRunning:
+        while self.is_running:
             self.clock.tick(60)
             for event in game.event.get():
                 if event.type == game.QUIT:
-                    isRunning = False
-        self.update()
+                    self.is_running = False
+                
+                if event.type == game.MOUSEBUTTONDOWN and self.turn == 'o':
+                    mx,my = game.mouse.get_pos()
+                    for square in self.squares:
+                        square.clicked(mx,my, self.turn,self.board,self.o_asset)
+                        
+                    
+            self.update()
+        
     
     # Update states
     def update(self):
