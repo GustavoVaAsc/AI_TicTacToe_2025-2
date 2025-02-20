@@ -1,5 +1,6 @@
 import pygame as game
 from Square import Square
+from Board import Board
 
 # Game class
 class Game: 
@@ -9,10 +10,12 @@ class Game:
     WIDTH = 0
     HEIGHT = 0
     
-    # Assets
+    # TODO: Change Asset name to UPPER CASE
+    
     blank_image = None
     o_asset = None
-    x_asset = None
+    
+    # Background
     background = None
     
     # Window integrity elements
@@ -20,24 +23,17 @@ class Game:
     clock = None
     is_running = False
     
-    square_group = game.sprite.Group()
-    squares = []
-    turn = 'o'
-    
     # Board
-    size = 9
-    board = [' ' for _ in range(size+1)]
+    board = None
     
     num = 0 # Gus: I think i'll name it better later
-    
     #Constructor
     def __init__(self):
         game.init()
         
-        # Load the assets
+        # Load the background
         self.blank_image = game.image.load('Blank.png')
         self.o_asset = game.image.load('o.png')
-        self.x_asset = game.image.load('x.png')
         self.background = game.image.load('bg.png')
         
         # Set window dimensions
@@ -46,19 +42,19 @@ class Game:
         
         # Define window elements
         self.window = game.display.set_mode((self.WIDTH,self.HEIGHT))
-        game.display.set_caption('Agent Tic-Tac-Toe by ChatGPI')
+        game.display.set_caption('Tic-Tac-Toe by ChatGPI')
         self.clock = game.time.Clock()
         self.background = game.transform.scale(self.background,(self.WIDTH,self.HEIGHT))
+        self.board = Board(3**2)
         
         self.num = 1
         
         for y in range (1,4):
             for x in range(1,4):
                 tempSquare = Square(x,y,self.num,self.blank_image)
-                self.square_group.add(tempSquare)
-                self.squares.append(tempSquare)
-        
-        self.num += 1
+                self.board.square_group.add(tempSquare)
+                self.board.squares.append(tempSquare)
+                self.num += 1
         
     # Run game
     def run(self):
@@ -69,19 +65,20 @@ class Game:
                 if event.type == game.QUIT:
                     self.is_running = False
                 
-                if event.type == game.MOUSEBUTTONDOWN and self.turn == 'o':
+                if event.type == game.MOUSEBUTTONDOWN and self.board.turn == 'o':
                     mx,my = game.mouse.get_pos()
-                    for square in self.squares:
-                        square.clicked(mx,my, self.turn,self.board,self.o_asset)
-                        
-                    
+                    for square in self.board.squares:
+                        square.clicked(mx,my, self.board.turn,self.board,self.o_asset)        
             self.update()
         
     
     # Update states
     def update(self):
         self.window.blit(self.background, (0,0))
-        self.square_group.draw(self.window)
-        self.square_group.update()
+        self.board.square_group.draw(self.window)
+        self.board.square_group.update()
 
         game.display.update()
+        
+        
+    

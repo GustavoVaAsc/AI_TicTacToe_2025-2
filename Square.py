@@ -1,4 +1,5 @@
 import pygame as game
+#from Board import Board
 
 # Class Square, extends Sprite class from pygame library
 class Square(game.sprite.Sprite):
@@ -9,8 +10,7 @@ class Square(game.sprite.Sprite):
         super().__init__() # Call the father class constructor
         self.width = 240
         self.height = 240
-        
-        self.x = x_id * self.width
+        self.x = x_id * self.height
         self.y = y_id * self.height
         self.content = ' '
         self.number = number
@@ -21,21 +21,25 @@ class Square(game.sprite.Sprite):
     def update(self):
         self.rect.center = (self.x, self.y)
         
-    def clicked(self, x_val, y_val, turn, board, image):
+    def clicked(self, x_val, y_val, turn, grid, image):
         if self.content == ' ':
             if self.rect.collidepoint(x_val, y_val):
                 self.content = turn
-                board[self.number] = True
-                
+                grid.board[self.number] = turn
+                self.image = image
+                self.image = game.transform.scale(self.image, (self.width, self.height))
+
+                # Switch turn before AI moves
                 if turn == 'x':
-                    self.image = image
-                    self.image = game.transform.scale(self.image, (self.width, self.height))
-                    turn = 'o'
+                    grid.turn = 'o'
+                else:
+                    grid.turn = 'x'
+
+                if grid.turn == 'x':  # Change this if AI plays 'x'
+                    grid.checkMove()
+
                 
-                if turn == 'o':
-                    self.image = image
-                    self.image = game.transform.scale(self.image, (self.width, self.height))
-                    turn = 'x'
+                    
                 
             
         
