@@ -96,4 +96,4 @@ def menu_difficulty():
 if __name__ == "__main__":
     menu_difficulty()
 
-# Now you have a menu with 3 difficulty buttons! Let me know if you want me to add more options or change the style! 🚀
+
