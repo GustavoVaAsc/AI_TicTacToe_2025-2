@@ -6,14 +6,14 @@ import subprocess
 def menu_difficulty():
     pygame.init()
     
-    # Window configuration
+    # Screen configuration
     width, height = 600, 600
-    window = pygame.display.set_mode((width, height))
+    screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("TicTacToe ChatGPI")
     
-    # Load background "bg."
-    background_image = pygame.image.load("bg.png")
-    background_image = pygame.transform.scale(background_image, (width, height))
+    # Load background "bg"
+    bg = pygame.image.load("bg.png")
+    bg= pygame.transform.scale(bg, (width, height))
 
     # Font settings
     font = pygame.font.SysFont(None, 36)
@@ -41,7 +41,11 @@ def menu_difficulty():
         {"image": insaneFace, "action": lambda: print("No hay no existe :b")},
     ]
 
-   # Run the script with de mode selected
+    #Font and text
+    font = pygame.font.SysFont('Comic Sans MS', 30)
+    text = font.render('TicTacToeGPI', True, (255, 255, 255))
+
+    # Run the script with de mode selected
     def run(file):
         try:
             pygame.quit()  # Close the window
@@ -54,24 +58,22 @@ def menu_difficulty():
     def draw_button(image, x, y, is_hovered):
 
         button_color = (159, 103, 255) if is_hovered else (189, 150, 255)
-        pygame.draw.rect(window, button_color, (x, y, button_width, button_height), border_radius=10)
+        pygame.draw.rect(screen, button_color, (x, y, button_width, button_height), border_radius=10)
         
         # Calculate position to center the image on the button
         img_x = x + (button_width - image.get_width()) // 2
         img_y = y + (button_height - image.get_height()) // 2
-        window.blit(image, (img_x, img_y))
+        screen.blit(image, (img_x, img_y))
 
     # Main loop
     running = True
     while running:
-        window.blit(background_image, (0, 0))
+        screen.blit(bg, (0, 0))
         
         mouse_pos = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for i, button in enumerate(buttons):
@@ -85,6 +87,9 @@ def menu_difficulty():
             button_y = button_y_start + i * (button_height + button_spacing)
             is_hovered = pygame.Rect(button_x, button_y, button_width, button_height).collidepoint(mouse_pos)
             draw_button(button["image"], button_x, button_y, is_hovered)
+        
+        # Text position on the screen
+        screen.blit(text, (239, 100))
         
         pygame.display.flip()
     
