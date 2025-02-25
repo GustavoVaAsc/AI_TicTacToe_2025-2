@@ -28,7 +28,7 @@ class Game:
     
     num = 0 # Gus: I think i'll name it better later
     #Constructor
-    def __init__(self):
+    def __init__(self, difficulty, board_size):
         game.init()
         
         # Load the background
@@ -45,13 +45,13 @@ class Game:
         game.display.set_caption('Tic-Tac-Toe by ChatGPI')
         self.clock = game.time.Clock()
         self.background = game.transform.scale(self.background,(self.WIDTH,self.HEIGHT))
-        self.board = Board(3**2)
+        self.board = Board(board_size**2)
         
         self.num = 1
         
-        for y in range (1,4):
-            for x in range(1,4):
-                tempSquare = Square(x,y,self.num,self.blank_image)
+        for y in range (1,board_size+1):
+            for x in range(1,board_size+1):
+                tempSquare = Square(x,y,self.num,self.blank_image,board_size)
                 self.board.square_group.add(tempSquare)
                 self.board.squares.append(tempSquare)
                 self.num += 1

@@ -6,10 +6,19 @@ class Square(game.sprite.Sprite):
     # Gus (Idea): Add a factor for dividing the square dimensions based on the size of the board
     
     # Constructor
-    def __init__(self, x_id, y_id, number,image):
+    def __init__(self, x_id, y_id, number,image, board_size):
         super().__init__() # Call the father class constructor
-        self.width = 240
-        self.height = 240
+        
+        if board_size == 4:
+            self.width = 180
+            self.height = 180
+        elif board_size == 5:
+            self.width = 144
+            self.height = 144
+        else:
+            self.width = 240
+            self.height = 240
+            
         self.x = x_id * self.height
         self.y = y_id * self.height
         self.content = ' '

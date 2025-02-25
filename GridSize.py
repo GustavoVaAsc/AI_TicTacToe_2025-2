@@ -22,8 +22,8 @@ def gridSize(difficulty):
     button_spacing = 20
 
     buttons = [
-        {"text": "4X4", "action": lambda: Settings(difficulty, 0)},  
-        {"text": "5X5", "action": lambda: Settings(difficulty, 1)}, 
+        {"text": "4X4", "action": lambda: Settings(difficulty, 4)},  
+        {"text": "5X5", "action": lambda: Settings(difficulty, 5)}, 
     ]
 
     # Font and text

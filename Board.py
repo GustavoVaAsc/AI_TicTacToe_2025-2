@@ -64,8 +64,10 @@ class Board:
             self.move = False
             
     def checkCorner(self):
-        # TODO: Generalize it for n x n grid
-        corners = [1, 3, 7, 9]
+        n = int(math.sqrt(self.size))  # Determine the grid dimension (n x n)
+    
+        # Compute the four corner positions
+        corners = [1, n, self.size - n + 1, self.size]
         for corner in corners:
             if self.board[corner] == ' ':
                 self.comp_move = corner
