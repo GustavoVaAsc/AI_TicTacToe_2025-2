@@ -16,6 +16,9 @@ class Minimax:
 
     dp={}
 
+    #Declaracion infinito
+    INF=1e8
+
     #Jugador 
 
     def __init__(self):
@@ -112,7 +115,7 @@ class Minimax:
 
     #Función para obtener el estado actual
 
-    def getState(self,player):
+    def getState(self):
         s=""
         for i in range(self.n):
             for j in range(self.n):
@@ -121,11 +124,11 @@ class Minimax:
 
     #Algoritmo minimax
 
-    def mM(self,player,depth):
+    def mM(self,player,alpha,beta,depth):
         if(self.gameOver()):
             return depth*((-1)**(self.player!=player))
-        x=1000*((-1)**(player==self.player))
-        estado=self.getState(player)
+        x=self.INF*((-1)**(player==self.player))
+        estado=self.getState()
         if(estado in self.dp):
             return self.dp[estado]
         for i in range(self.n):
@@ -134,15 +137,25 @@ class Minimax:
                     self.Mark(player,i,j)
                     if(self.winner(player,i,j)):
                         self.unMark(player,i,j)
-                        self.dp[self.getState(player)]=(self.n**2+1)*((-1)**(self.player!=player))+depth*((-1)**self.player==player)
-                        return (self.n**2+1)*((-1)**(self.player!=player))+depth*((-1)**self.player==player)
+                        self.dp[self.getState()]=(self.n**2+1)*((-1)**(self.player!=player))+depth*((-1)**(self.player==player))
+                        return (self.n**2+1)*((-1)**(self.player!=player))+depth*((-1)**(self.player==player))
                     next=not player
-                    if(self.player==player):
-                        x=max(x,self.mM(next,depth+1))
-                    else:
-                        x=min(x,self.mM(next,depth+1))
+                    val=self.mM(next,alpha,beta,depth+1)
                     self.unMark(player,i,j)
-        self.dp[self.getState(player)]=x
+                    if(self.player==player):
+                        x=max(x,val)
+                        alpha=max(alpha,x)
+                        if(beta<=alpha):
+                            self.dp[self.getState()]=x
+                            return x
+                    else:
+                        x=min(x,val)
+                        beta=min(beta,x)
+                        if(beta<=alpha):
+                            self.dp[self.getState()]=x
+                            return x
+                    
+        self.dp[self.getState()]=x
         return x
 
     def bestMove(self):
@@ -157,7 +170,7 @@ class Minimax:
                         return (i,j)
                     nxt=not self.player
                     self.dp={}
-                    aux=self.mM(nxt,0)
+                    aux=self.mM(nxt,-self.INF,self.INF,0)
                     self.unMark(self.player,i,j)
                     if(aux>best):
                         best=aux

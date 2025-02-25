@@ -13,6 +13,8 @@ class Board:
     squares = []
     turn = 'o'
     winning_states = []
+    winner = '-'
+    move_count = 0
     
     # Assets
     blank_image = None
@@ -27,6 +29,7 @@ class Board:
         self.blank_image = game.image.load('Blank.png')
         self.o_asset = game.image.load('o.png')
         self.x_asset = game.image.load('x.png')
+        self.move_count = 0  # Initialize the move counter
         
     def checkMove(self):
         self.move = True
@@ -36,6 +39,9 @@ class Board:
             
         if self.move:
             self.checkForWin('x')
+        
+        if not self.is_gameover:  # Only check for tie if the game isn't over
+            self.checkForTie()
         
         self.checkCentre()
 
@@ -145,13 +151,17 @@ class Board:
 
             a, b, c = triplet
             if self.board[a] == player and self.board[b] == player and self.board[c] == player:
-                return True
-        return False
+                self.is_gameover = True  # Set the game-over flag
+                self.winner = player
+                return  # No need to continue once a winner is found
 
+        self.is_gameover = False  # Set the game-over flag to False if no winner
 
 
     def checkForTie(self):
-        if all(cell != ' ' for cell in self.board[1:]) and not self.checkForWin('X') and not self.checkForWin('O'):
-            return True  # It's a tie
-        return False  # The game is still ongoing
-
+        if self.move_count == self.size:  # Check if all moves are made
+            if not self.checkForWin('x') and not self.checkForWin('o'):
+                self.is_gameover = True  # Set game over if no winner
+                self.winner = '-'  # Indicate a tie
+        else:
+            self.is_gameover = False  # Game is still ongoing
