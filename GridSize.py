@@ -1,58 +1,44 @@
 import pygame
 import sys
-from GridSize import *
+from Settings import *  # If you need to import any other module
 
+def gridSize(difficulty):
+    # Initialize pygame
+    pygame.init()  # This is important for the font system and other modules to work
 
-
-def menu_difficulty():
-    pygame.init()
-    
-    # Screen configuration
+    # The rest of your code goes here
     width, height = 600, 600
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("TicTacToe ChatGPI")
     
     # Load background "bg"
     bg = pygame.image.load("bg.png")
-    bg= pygame.transform.scale(bg, (width, height))
+    bg = pygame.transform.scale(bg, (width, height))
 
-    # Button properties
+    # Button configuration
     button_width, button_height = 300, 60
     button_x = (width - button_width) // 2
     button_y_start = 200
     button_spacing = 20
 
-    # Load button images (difficutly faces)
-    easyFace = pygame.image.load("easyFace.png")
-    mediumFace = pygame.image.load("mediumFace.png")
-    insaneFace = pygame.image.load("insaneFace.png")
-
-    # Resize the images 
-    easyFace = pygame.transform.scale(easyFace, (40, 40))
-    mediumFace = pygame.transform.scale(mediumFace, (40, 40))
-    insaneFace = pygame.transform.scale(insaneFace, (40, 40))
-
-
     buttons = [
-        {"image": easyFace, "action": lambda: gridSize(1)},
-        {"image": mediumFace, "action": lambda: gridSize(2)},
-        {"image": insaneFace, "action": lambda: gridSize(3)},
+        {"text": "4X4", "action": lambda: Settings(difficulty, 0)},  
+        {"text": "5X5", "action": lambda: Settings(difficulty, 1)}, 
     ]
 
-    #Font and text
-    font = pygame.font.SysFont('Comic Sans MS', 30)
+    # Font and text
+    font = pygame.font.SysFont('Comic Sans MS', 30)    
     text = font.render('TicTacToeGPI', True, (255, 255, 255))
 
-    # Draw buttons in the window
-    def draw_button(image, x, y, is_hovered):
-
+    # Function to draw buttons with text
+    def draw_button(text, x, y, is_hovered):
         button_color = (159, 103, 255) if is_hovered else (189, 150, 255)
         pygame.draw.rect(screen, button_color, (x, y, button_width, button_height), border_radius=10)
         
-        # Calculate position to center the image on the button
-        img_x = x + (button_width - image.get_width()) // 2
-        img_y = y + (button_height - image.get_height()) // 2
-        screen.blit(image, (img_x, img_y))
+        # Draw the text centered on the button
+        text_surface = font.render(text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(x + button_width // 2, y + button_height // 2))
+        screen.blit(text_surface, text_rect)
 
     # Main loop
     running = True
@@ -70,24 +56,17 @@ def menu_difficulty():
                     button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
                     if button_rect.collidepoint(mouse_pos):
                         pygame.quit() 
-                        button["action"]()
-                        
-
-        # Draw buttons
+                        button["action"]()  
+        # Draw the buttons with text
         for i, button in enumerate(buttons):
             button_y = button_y_start + i * (button_height + button_spacing)
             is_hovered = pygame.Rect(button_x, button_y, button_width, button_height).collidepoint(mouse_pos)
-            draw_button(button["image"], button_x, button_y, is_hovered)
+            draw_button(button["text"], button_x, button_y, is_hovered)
         
-        # Text position on the screen
+        # Draw the text at the top
         screen.blit(text, (239, 100))
         pygame.display.flip()
     
     # Clean up and close
     pygame.quit()
     sys.exit()
-
-if __name__ == "__main__":
-    menu_difficulty()
-
-
