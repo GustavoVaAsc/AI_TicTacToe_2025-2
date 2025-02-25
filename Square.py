@@ -32,10 +32,17 @@ class Square(game.sprite.Sprite):
                 # Switch turn before AI moves
                 if turn == 'x':
                     grid.turn = 'o'
+                    grid.checkForWin('x')
                 else:
                     grid.turn = 'x'
-
-                if grid.turn == 'x':
+                    grid.checkForWin('o')
+                    
+                grid.move_count+=1
+                
+                if not grid.is_gameover:
+                    grid.checkForTie() 
+                    
+                if grid.turn == 'x' and not grid.is_gameover:
                     grid.checkMove()
 
                 

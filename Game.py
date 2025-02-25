@@ -78,6 +78,10 @@ class Game:
         self.board.square_group.draw(self.window)
         self.board.square_group.update()
 
+        if self.board.is_gameover:
+            self.board.square_group.empty()
+            self.background = game.image.load(self.board.winner.upper()+"wins.jpg")
+            self.background = game.transform.scale(self.background, (self.WIDTH,self.HEIGHT))
         game.display.update()
         
     
