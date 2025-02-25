@@ -35,7 +35,7 @@ class Square(game.sprite.Sprite):
                 else:
                     grid.turn = 'x'
 
-                if grid.turn == 'x':  # Change this if AI plays 'x'
+                if grid.turn == 'x':
                     grid.checkMove()
 
                 

@@ -1,13 +1,21 @@
 import pygame
 import sys
 import subprocess
+from Game import *
+
+
+# Function to start the game
+def start_game():
+    pygame.quit()  # Close the menu before launching the game
+    game = Game()  # Create a Game instance
+    game.run()  # Start the game
 
 
 def menu_difficulty():
     pygame.init()
     
     # Screen configuration
-    width, height = 600, 600
+    width, height = 1000, 1000
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("TicTacToe ChatGPI")
     
@@ -36,11 +44,10 @@ def menu_difficulty():
 
 
     buttons = [
-        {"image": easyFace, "action": lambda: run("Main.py")},
+        {"image": easyFace, "action": lambda: start_game()},
         {"image": mediumFace, "action": lambda: print("No hay no existe :b")},
         {"image": insaneFace, "action": lambda: print("No hay no existe :b")},
     ]
-
     #Font and text
     font = pygame.font.SysFont('Comic Sans MS', 30)
     text = font.render('TicTacToeGPI', True, (255, 255, 255))
@@ -96,7 +103,6 @@ def menu_difficulty():
     # Clean up and close
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     menu_difficulty()
