@@ -1,0 +1,180 @@
+from Agent import Agent
+import math
+
+class MinimaxAgent(Agent):
+
+    #Tamaño del grid
+
+    n=4
+
+    #Declaración del grid
+
+    grid=[]
+
+    #Declaración símbolo de jugador
+
+    symbol=[]
+
+    #Declaración del dp
+
+    dp={}
+
+    #Declaracion infinito
+    INF=1e8
+    
+    player = True
+
+    #Jugador 
+
+    def __init__(self,grid):
+        self.grid = grid.board
+        self.n = int(math.sqrt(grid.size))
+        self.symbol.append('o')
+        self.symbol.append('x')
+
+    def checkMove(self,real_board):
+        self.grid=real_board.board
+        self.bestMove(real_board)
+    
+    #Funcion para marcar una casilla del grid
+
+    def Mark(self,player,x,y):
+        self.grid[x*self.n+y]=self.symbol[player]
+        
+    
+    #Función para desmarcar una casilla del grid
+
+    def unMark(self,player,x,y):
+        self.grid[x*self.n+y]=' '
+
+    #Función para determinar que el juego no puede continuar
+
+    def gameOver(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                if(self.grid[i*self.n+j]==' '):
+                    return False
+        return True
+
+    #Función para verificar si un jugador ya gano
+
+    def validPoint(self,x,y):
+        if(x>=0 and x<self.n and y>=0 and y<self.n):
+            return True
+        return False
+    
+
+    def winner(self,player,x,y):
+
+        if(self.grid[self.n*x+y]!=self.symbol[player]):
+            return False
+        
+        #Checar vertical hacia adelante
+        if(self.validPoint(x+2,y) and self.grid[self.n*(x+1)+y]==self.grid[self.n*(x+2)+y] and self.grid[self.n*(x+1)+y]==self.symbol[player]):
+            return True
+        
+        #Checar vertical en medio
+        if(self.validPoint(x+1,y) and self.validPoint(x-1,y) and self.grid[self.n*(x+1)+y]==self.grid[self.n*(x-1)+y] and self.grid[self.n*(x+1)+y]==self.symbol[player]):
+            return True
+
+        #vertical izquierda
+        if(self.validPoint(x-2,y) and self.grid[self.n*(x-1)+y]==self.grid[self.n*(x-2)+y] and self.grid[self.n*(x-1)+y]==self.symbol[player]):
+            return True 
+        
+        #Horizontal hacia arriba
+        if(self.validPoint(x,y+2) and self.grid[self.n*x+y+1]==self.grid[self.n*x+y+2] and self.grid[self.n*x+y+1]==self.symbol[player]):
+            return True
+        
+        #Horizontal hacia abajo
+        if(self.validPoint(x,y-2) and self.grid[self.n*x+y-1]==self.grid[self.n*x+y-2] and self.grid[self.n*x+y-1]==self.symbol[player]):
+            return True
+        
+        #Horizontal en medio
+        if(self.validPoint(x,y+1) and self.validPoint(x,y-1) and self.grid[self.n*x+y+1]==self.grid[self.n*x+y-1] and self.grid[self.n*x+y+1]==self.symbol[player]):
+            return True
+        
+        #Digonal positiva hacia arriba
+        if(self.validPoint(x-2,y+2) and self.grid[self.n*(x-1)+y+1]==self.grid[self.n*(x-2)+y+2] and self.grid[self.n*(x-1)+y+1]==self.symbol[player]):
+            return True
+        #Diagonal positiva hacia abajo
+        if(self.validPoint(x+2,y-2) and self.grid[self.n*(x+1)+y-1]==self.grid[self.n*(x+2)+y-2] and self.grid[self.n*(x+1)+y-1]==self.symbol[player]):
+            return True
+        #Diagonal positiva en medio
+        if(self.validPoint(x+1,y-1) and self.validPoint(x-1,y+1) and self.grid[self.n*(x+1)+y-1]==self.grid[self.n*(x-1)+y+1] and self.grid[self.n*(x-1)+y+1]==self.symbol[player]):
+            return True
+        #Diagonal negativa hacia arriba
+        if(self.validPoint(x+2,y+2) and self.grid[self.n*(x+1)+y+1]==self.grid[self.n*(x+2)+y+2] and self.grid[self.n*(x+1)+y+1]==self.symbol[player]):
+            return True
+        #Diagonal negativa hacia abajo
+        if(self.validPoint(x-2,y-2) and self.grid[self.n*(x-2)+y-2]==self.grid[self.n*(x-1)+y-1] and self.grid[self.n*(x-1)+y-1]==self.symbol[player]):
+            return True
+        if(self.validPoint(x+1,y+1) and self.validPoint(x-1,y-1) and self.grid[self.n*(x+1)+y+1]==self.grid[self.n*(x-1)+y-1] and self.grid[self.n*(x+1)+y+1]==self.symbol[player]):
+            return True
+        
+        return False
+
+    #Función para obtener el estado actual
+
+    def getState(self):
+        s=""
+        for i in range(self.n):
+            for j in range(self.n):
+                s+=self.grid[self.n*i+j]
+        return s
+
+    #Algoritmo minimax
+
+    def mM(self,player,alpha,beta,depth):
+        if(self.gameOver()):
+            return depth*((-1)**(self.player!=player))
+        x=self.INF*((-1)**(player==self.player))
+        estado=self.getState()
+        if(estado in self.dp):
+            return self.dp[estado]
+        for i in range(self.n):
+            for j in range(self.n):
+                if(self.grid[self.n*i+j]==' '):
+                    self.Mark(player,i,j)
+                    if(self.winner(player,i,j)):
+                        self.unMark(player,i,j)
+                        self.dp[self.getState()]=(self.n**2+1)*((-1)**(self.player!=player))+depth*((-1)**(self.player==player))
+                        return (self.n**2+1)*((-1)**(self.player!=player))+depth*((-1)**(self.player==player))
+                    next=not player
+                    val=self.mM(next,alpha,beta,depth+1)
+                    self.unMark(player,i,j)
+                    if(self.player==player):
+                        x=max(x,val)
+                        alpha=max(alpha,x)
+                        if(beta<=alpha):
+                            self.dp[self.getState()]=x
+                            return x
+                    else:
+                        x=min(x,val)
+                        beta=min(beta,x)
+                        if(beta<=alpha):
+                            self.dp[self.getState()]=x
+                            return x
+                    
+        self.dp[self.getState()]=x
+        return x
+
+    def bestMove(self,real_board):
+        best=-1000
+        coords=(0,0)
+        for i in range(self.n):
+            for j in range(self.n):
+                if(self.grid[self.n*i+j]==' '):
+                    self.Mark(self.player,i,j)
+                    if(self.winner(self.player,i,j)):
+                        self.unMark(self.player,i,j)
+                        return (i,j)
+                    nxt=not self.player
+                    self.dp={}
+                    aux=self.mM(nxt,-self.INF,self.INF,0)
+                    self.unMark(self.player,i,j)
+                    if(aux>best):
+                        best=aux
+                        coords=(i,j) 
+        move = coords[0]*self.n+coords[1]
+        real_board.squares[move].clicked(real_board.squares[move].x, real_board.squares[move].y, 'x', real_board, real_board.x_asset)
+                        

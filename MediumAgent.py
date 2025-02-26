@@ -6,6 +6,7 @@ class MediumAgent(Agent):
     move = True
     comp_move = 0
     danger_map = {}
+    
     def checkMove(self,grid):
         self.move = True
         

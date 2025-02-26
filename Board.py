@@ -2,6 +2,7 @@ from Game import *
 import math
 from EasyAgent import EasyAgent
 from MediumAgent import MediumAgent
+from MinimaxAgent import MinimaxAgent
 
 class Board:
     size = 9
@@ -18,6 +19,7 @@ class Board:
     winner = '-'
     move_count = 0
     agent = None
+    difficulty = 0
     
     # Assets
     blank_image = None
@@ -34,16 +36,20 @@ class Board:
         self.x_asset = game.image.load('x.png')
         self.move_count = 0  # Initialize the move counter
         print("Difficulty "+str(difficulty))
+        self.difficulty = difficulty
         if difficulty == 1:
             self.agent = EasyAgent()
         elif difficulty == 2:
             self.agent = MediumAgent()
             self.agent.generateDangerPositions(self)
         else:
-            print('hola lol')
+            self.agent = MinimaxAgent(self)
         
     def checkMove(self):
-        self.agent.checkMove(self)
+        if self.difficulty == 1 or self.difficulty ==2:
+            self.agent.checkMove()
+        else:
+            self.agent.checkMove(self)
 
     def generateWinningStates(self):
         self.winning_states = []
