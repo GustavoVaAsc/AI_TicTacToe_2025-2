@@ -1,6 +1,5 @@
 import pygame
 import sys
-
 from Game import *
 
 # Driver function

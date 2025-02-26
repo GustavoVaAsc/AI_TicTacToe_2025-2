@@ -1,21 +1,17 @@
 class MinimaxAgent:
 
     #Tamaño del grid
-
     n=4
 
     #Declaración del grid
-
     grid=[]
 
     #Declaración símbolo de jugador
-
     symbol=[]
 
     player=None
 
     #Declaración del dp
-
     dp={}
 
     #Declaracion infinito
@@ -196,37 +192,23 @@ class MinimaxAgent:
                 if(game.winner(jugador,x,y)):
                     game.show()
                     print("Felicidades!!! jugador")
-                    return
+                    exit()
                 if(game.gameOver()):
                     print("Empate!!!")
-                    return
+                    exit()
                 x,y=game.bestMove()
                 game.Mark(game.player,x,y)
                 if(game.winner(game.player,x,y)):
                     game.show()
                     print("Mala suerte!!! jugador")
-                    return 
+                    exit()
                 if(game.gameOver()):
                     print("Empate!!!")
-                    return
+                    exit()
             else:
                 x,y=game.bestMove()
                 game.Mark(game.player,x,y)
                 game.show()
                 if(game.winner(game.player,x,y)):
                     print("Mala suerte!!! jugador")
-                    return
-                if(game.gameOver()):
-                    print("Empate!!!")
-                    return
-                x,y=input("Ingresa tus coordenadas en la forma x y: ").split()
-                x=int(x)
-                y=int(y)
-                game.Mark(jugador,x,y)
-                if(game.winner(jugador,x,y)):
-                    game.show()
-                    print("Felicidades!!! jugador")
-                    return
-                if(game.gameOver()):
-                    print("Empate!!!")
-                    return
+                    exit()
