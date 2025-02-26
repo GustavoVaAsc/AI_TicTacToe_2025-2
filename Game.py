@@ -45,7 +45,7 @@ class Game:
         game.display.set_caption('Tic-Tac-Toe by ChatGPI')
         self.clock = game.time.Clock()
         self.background = game.transform.scale(self.background,(self.WIDTH,self.HEIGHT))
-        self.board = Board(board_size**2)
+        self.board = Board(board_size**2,difficulty)
         
         self.num = 1
         

@@ -1,5 +1,7 @@
 from Game import *
 import math
+from EasyAgent import EasyAgent
+from MediumAgent import MediumAgent
 
 class Board:
     size = 9
@@ -15,13 +17,14 @@ class Board:
     winning_states = []
     winner = '-'
     move_count = 0
+    agent = None
     
     # Assets
     blank_image = None
     o_asset = None
     x_asset = None
     
-    def __init__(self, size):
+    def __init__(self, size, difficulty):
         self.size = size
         self.comp_move = self.size // 2 
         self.winning_states = self.generateWinningStates()
@@ -30,56 +33,17 @@ class Board:
         self.o_asset = game.image.load('o.png')
         self.x_asset = game.image.load('x.png')
         self.move_count = 0  # Initialize the move counter
+        print("Difficulty "+str(difficulty))
+        if difficulty == 1:
+            self.agent = EasyAgent()
+        elif difficulty == 2:
+            self.agent = MediumAgent()
+            self.agent.generateDangerPositions(self)
+        else:
+            print('hola lol')
         
     def checkMove(self):
-        self.move = True
-        
-        if self.move:
-            self.checkForWin('o')
-            
-        if self.move:
-            self.checkForWin('x')
-        
-        if not self.is_gameover:  # Only check for tie if the game isn't over
-            self.checkForTie()
-        
-        self.checkCentre()
-
-        if self.move:
-            self.checkCorner()
-
-        if self.move:
-            self.checkEdge()
-
-        if not self.move:
-            for square in self.squares:
-                if square.number == self.comp_move:
-                    square.clicked(square.x, square.y, self.turn, self, self.x_asset)
-                    break  # Ensure only one move is made
-
-    def checkCentre(self):
-        centre_index = self.size // 2
-        if self.board[centre_index] == ' ':
-            self.comp_move = centre_index
-            self.move = False
-            
-    def checkCorner(self):
-        n = int(math.sqrt(self.size))  # Determine the grid dimension (n x n)
-    
-        # Compute the four corner positions
-        corners = [1, n, self.size - n + 1, self.size]
-        for corner in corners:
-            if self.board[corner] == ' ':
-                self.comp_move = corner
-                self.move = False
-                break
-                
-    def checkEdge(self):
-        for i in range(2,self.size+1,2):
-            if self.board[i] == ' ':
-                self.comp_move = i
-                self.move = False
-                break
+        self.agent.checkMove(self)
 
     def generateWinningStates(self):
         self.winning_states = []
@@ -115,30 +79,6 @@ class Board:
         print("Valid Winning States:", self.winning_states)  # Debugging output
         return self.winning_states
 
-
-    
-    def whoWins(self,player):
-        for triplet in self.winning_states:
-            a, b, c = triplet
-            if (
-                self.board[a] == player and self.board[b] == player and self.board[c] == ' '
-            ):
-                self.comp_move = c
-                self.move = False
-                return
-            elif (
-                self.board[a] == player and self.board[b] == ' ' and self.board[c] == player
-            ):
-                self.comp_move = b
-                self.move = False
-                return
-            elif (
-                self.board[a] == ' ' and self.board[b] == player and self.board[c] == player
-            ):
-                self.comp_move = a
-                self.move = False
-                return
-    
     def checkForWin(self, player):
         if not self.winning_states:
             print("Warning: winning states are not initialized!")
@@ -158,7 +98,6 @@ class Board:
                 return  # No need to continue once a winner is found
 
         self.is_gameover = False  # Set the game-over flag to False if no winner
-
 
     def checkForTie(self):
         if self.move_count == self.size:  # Check if all moves are made
