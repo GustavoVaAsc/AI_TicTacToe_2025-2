@@ -46,7 +46,7 @@ class Game:
         self.background = game.transform.scale(self.background,(self.WIDTH,self.HEIGHT))
         # Initialize our game board
         self.board = Board(board_size**2,difficulty)
-        
+        print(difficulty)
         self.num = 1
         
         # Insert the rectangles to render on screen

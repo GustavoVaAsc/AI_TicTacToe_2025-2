@@ -3,7 +3,6 @@ import sys
 from GridSize import *
 
 
-
 def menu_difficulty():
     pygame.init()
     

@@ -1,6 +1,6 @@
 import pygame
 import sys
-from Settings import *  # If you need to import any other module
+from Settings import * 
 
 # Function to select grid size
 def gridSize(difficulty):

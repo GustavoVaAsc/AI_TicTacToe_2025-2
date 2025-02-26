@@ -51,7 +51,7 @@ class Board:
             # Generate positions where we could lose
             self.agent.generateDangerPositions(self)
         else:
-<<<<<<< HEAD
+            print(difficulty)
             pygame.quit()
             self.agent = MinimaxAgent()
             self.agent.menu(int(math.sqrt(self.size)))
@@ -60,12 +60,6 @@ class Board:
         if(self.difficulty==3):
             self.agent.menu()
         else:
-=======
-            self.agent = MinimaxAgent(self)
-    
-    # Check if the agent can move
-    def checkMove(self):
->>>>>>> 6735ad5f3a14e6d4f1e7bec2cd806b801a660335
             self.agent.checkMove(self)
 
     # Generate all cases where there's a winning state
