@@ -32,7 +32,7 @@ def menu_difficulty():
     mediumFace = pygame.transform.scale(mediumFace, (40, 40))
     insaneFace = pygame.transform.scale(insaneFace, (40, 40))
 
-
+    # Button list with lambda functions to make the actions
     buttons = [
         {"image": easyFace, "action": lambda: gridSize(1)},
         {"image": mediumFace, "action": lambda: gridSize(2)},
@@ -59,11 +59,16 @@ def menu_difficulty():
     while running:
         screen.blit(bg, (0, 0))
         
-        mouse_pos = pygame.mouse.get_pos()
+        # Initialize the mouse position
+        mouse_pos = pygame.mouse.get_pos() 
 
+        # Get the events of our pygame window
         for event in pygame.event.get():
+            # Check for quit
             if event.type == pygame.QUIT:
                 running = False
+            
+            # Check if we're pressing the buttons
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for i, button in enumerate(buttons):
                     button_y = button_y_start + i * (button_height + button_spacing)
