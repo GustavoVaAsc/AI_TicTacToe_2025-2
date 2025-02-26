@@ -6,15 +6,18 @@ from MediumAgent import MediumAgent
 from MinimaxAgent import MinimaxAgent
 
 class Board:
+    # Board elements
     size = 9
     board = [' ' for _ in range(size+1)]
     
-    move = True
-    comp_move = 5
+    # Flag to determine if there is a game over
     is_gameover = False
     
+    # Squares to render as cells
     square_group = game.sprite.Group()
-    squares = []
+    squares = [] # List of squares
+    
+    # Game elements
     turn = 'o'
     winning_states = []
     winner = '-'
@@ -27,7 +30,9 @@ class Board:
     o_asset = None
     x_asset = None
     
+    # Initializer class
     def __init__(self, size, difficulty):
+        # Load and initialize all the values
         self.size = size
         self.comp_move = self.size // 2 
         self.winning_states = self.generateWinningStates()
@@ -36,14 +41,17 @@ class Board:
         self.o_asset = game.image.load('o.png')
         self.x_asset = game.image.load('x.png')
         self.move_count = 0  # Initialize the move counter
-        print("Difficulty "+str(difficulty))
+        
+        # Set AI difficulty
         self.difficulty = difficulty
         if difficulty == 1:
             self.agent = EasyAgent()
         elif difficulty == 2:
             self.agent = MediumAgent()
+            # Generate positions where we could lose
             self.agent.generateDangerPositions(self)
         else:
+<<<<<<< HEAD
             pygame.quit()
             self.agent = MinimaxAgent()
             self.agent.menu(int(math.sqrt(self.size)))
@@ -52,11 +60,18 @@ class Board:
         if(self.difficulty==3):
             self.agent.menu()
         else:
+=======
+            self.agent = MinimaxAgent(self)
+    
+    # Check if the agent can move
+    def checkMove(self):
+>>>>>>> 6735ad5f3a14e6d4f1e7bec2cd806b801a660335
             self.agent.checkMove(self)
 
+    # Generate all cases where there's a winning state
     def generateWinningStates(self):
         self.winning_states = []
-        n = int(math.sqrt(self.size))  # Grid dimension
+        n = int(math.sqrt(self.size)) # Size of the grid
 
         # Rows
         for i in range(n):
@@ -85,22 +100,21 @@ class Board:
                 if all(1 <= idx <= self.size for idx in anti_diag):
                     self.winning_states.append(anti_diag)
 
-        print("Valid Winning States:", self.winning_states)  # Debugging output
         return self.winning_states
 
+    # Check if we have a winner
     def checkForWin(self, player):
         if not self.winning_states:
-            print("Warning: winning states are not initialized!")
             self.winning_states = self.generateWinningStates()  # Ensure winning states are generated
         
         max_index = self.size  # The last valid index (size represents all tiles)
 
+        # Iterating all triplets of winning states
         for triplet in self.winning_states:
             if any(idx < 1 or idx > max_index for idx in triplet):  # Detect invalid indices
-                print(f"Invalid triplet detected: {triplet}")  # Debugging output
                 continue  # Skip invalid triplets to prevent crashes
 
-            a, b, c = triplet
+            a, b, c = triplet # Check the cells of the triplet
             if self.board[a] == player and self.board[b] == player and self.board[c] == player:
                 self.is_gameover = True  # Set the game-over flag
                 self.winner = player
@@ -108,6 +122,7 @@ class Board:
 
         self.is_gameover = False  # Set the game-over flag to False if no winner
 
+    # Check all the moves are done for determine a tie
     def checkForTie(self):
         if self.move_count == self.size:  # Check if all moves are made
             if not self.checkForWin('x') and not self.checkForWin('o'):

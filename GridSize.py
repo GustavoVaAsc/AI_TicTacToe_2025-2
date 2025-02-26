@@ -2,11 +2,12 @@ import pygame
 import sys
 from Settings import *  # If you need to import any other module
 
+# Function to select grid size
 def gridSize(difficulty):
     # Initialize pygame
     pygame.init()  # This is important for the font system and other modules to work
 
-    # The rest of your code goes here
+    # Set screen parameters
     width, height = 600, 600
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("TicTacToe ChatGPI")
@@ -21,6 +22,7 @@ def gridSize(difficulty):
     button_y_start = 200
     button_spacing = 20
 
+    # Button list with lambda functions to set up the game
     buttons = [
         {"text": "4X4", "action": lambda: Settings(difficulty, 4)},  
         {"text": "5X5", "action": lambda: Settings(difficulty, 5)}, 
@@ -45,15 +47,20 @@ def gridSize(difficulty):
     while running:
         screen.blit(bg, (0, 0))
         
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_pos = pygame.mouse.get_pos() # Get mouse position
 
+        # Iterate window events
         for event in pygame.event.get():
+            # Check for quit
             if event.type == pygame.QUIT:
                 running = False
+            # Check for button pressed
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for i, button in enumerate(buttons):
                     button_y = button_y_start + i * (button_height + button_spacing)
+                    # Define it as a rectangle
                     button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+                    # Using built-in collide point
                     if button_rect.collidepoint(mouse_pos):
                         pygame.quit() 
                         button["action"]()  

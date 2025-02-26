@@ -3,10 +3,11 @@ import sys
 
 from Game import *
 
+# Driver function
 def Settings(difficulty, size):
-    print(f"Difficulty: {difficulty}")
-    print(f"Siz: {size}")
+    # Generate a game instance
     tictactoe = Game(difficulty,size)
+    # Run the game
     tictactoe.run()
     pygame.quit()
     sys.exit()
