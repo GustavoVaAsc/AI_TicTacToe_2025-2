@@ -38,6 +38,7 @@ def menu_difficulty():
         {"image": mediumFace, "action": lambda: gridSize(2)},
         {"image": insaneFace, "action": lambda: gridSize(3)},
     ]
+    #Acuerdate
 
     #Font and text
     font = pygame.font.SysFont('Comic Sans MS', 30)

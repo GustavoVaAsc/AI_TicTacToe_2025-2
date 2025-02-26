@@ -1,5 +1,6 @@
 from Game import *
 import math
+import pygame
 from EasyAgent import EasyAgent
 from MediumAgent import MediumAgent
 from MinimaxAgent import MinimaxAgent
@@ -43,11 +44,13 @@ class Board:
             self.agent = MediumAgent()
             self.agent.generateDangerPositions(self)
         else:
-            self.agent = MinimaxAgent(self)
+            pygame.quit()
+            self.agent = MinimaxAgent()
+            self.agent.menu(int(math.sqrt(self.size)))
         
     def checkMove(self):
-        if self.difficulty == 1 or self.difficulty ==2:
-            self.agent.checkMove()
+        if(self.difficulty==3):
+            self.agent.menu()
         else:
             self.agent.checkMove(self)
 

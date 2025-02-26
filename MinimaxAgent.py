@@ -1,7 +1,4 @@
-from Agent import Agent
-import math
-
-class MinimaxAgent(Agent):
+class MinimaxAgent:
 
     #Tamaño del grid
 
@@ -15,27 +12,31 @@ class MinimaxAgent(Agent):
 
     symbol=[]
 
+    player=None
+
     #Declaración del dp
 
     dp={}
 
     #Declaracion infinito
     INF=1e8
-    
-    player = True
 
     #Jugador 
 
-    def __init__(self,grid):
-        self.grid = grid.board
-        self.n = int(math.sqrt(grid.size))
+    def __init__(self):
+        for i in range(self.n**2):
+                self.grid.append('_')
         self.symbol.append('o')
         self.symbol.append('x')
 
-    def checkMove(self,real_board):
-        self.grid=real_board.board
-        self.bestMove(real_board)
-    
+    #Funcion para mostrar el grid
+
+    def show(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                print(self.grid[i*self.n+j],end=" ")
+            print()
+
     #Funcion para marcar una casilla del grid
 
     def Mark(self,player,x,y):
@@ -45,14 +46,14 @@ class MinimaxAgent(Agent):
     #Función para desmarcar una casilla del grid
 
     def unMark(self,player,x,y):
-        self.grid[x*self.n+y]=' '
+        self.grid[x*self.n+y]='_'
 
     #Función para determinar que el juego no puede continuar
 
     def gameOver(self):
         for i in range(self.n):
             for j in range(self.n):
-                if(self.grid[i*self.n+j]==' '):
+                if(self.grid[i*self.n+j]=='_'):
                     return False
         return True
 
@@ -133,7 +134,7 @@ class MinimaxAgent(Agent):
             return self.dp[estado]
         for i in range(self.n):
             for j in range(self.n):
-                if(self.grid[self.n*i+j]==' '):
+                if(self.grid[self.n*i+j]=='_'):
                     self.Mark(player,i,j)
                     if(self.winner(player,i,j)):
                         self.unMark(player,i,j)
@@ -158,12 +159,12 @@ class MinimaxAgent(Agent):
         self.dp[self.getState()]=x
         return x
 
-    def bestMove(self,real_board):
+    def bestMove(self):
         best=-1000
         coords=(0,0)
         for i in range(self.n):
             for j in range(self.n):
-                if(self.grid[self.n*i+j]==' '):
+                if(self.grid[self.n*i+j]=='_'):
                     self.Mark(self.player,i,j)
                     if(self.winner(self.player,i,j)):
                         self.unMark(self.player,i,j)
@@ -175,6 +176,59 @@ class MinimaxAgent(Agent):
                     if(aux>best):
                         best=aux
                         coords=(i,j) 
-        move = coords[0]*self.n+coords[1]
-        real_board.squares[move].clicked(real_board.squares[move].x, real_board.squares[move].y, 'x', real_board, real_board.x_asset)
+        return coords
                         
+    def menu(self,n):
+        game=MinimaxAgent()
+        game.n=n
+        jugador=int(input("Ingresa tu número de jugador\na)Jugador 1    b)Jugador 2\n"))-1
+        if(jugador==0):
+            game.player=1
+        else:
+            game.player=0
+        while(True):
+            if(jugador==0):
+                game.show()
+                x,y=input("Ingresa tus coordenadas en la forma x y: ").split()
+                x=int(x)
+                y=int(y)
+                game.Mark(jugador,x,y)
+                if(game.winner(jugador,x,y)):
+                    game.show()
+                    print("Felicidades!!! jugador")
+                    return
+                if(game.gameOver()):
+                    print("Empate!!!")
+                    return
+                x,y=game.bestMove()
+                game.Mark(game.player,x,y)
+                if(game.winner(game.player,x,y)):
+                    game.show()
+                    print("Mala suerte!!! jugador")
+                    return 
+                if(game.gameOver()):
+                    print("Empate!!!")
+                    return
+            else:
+                x,y=game.bestMove()
+                game.Mark(game.player,x,y)
+                game.show()
+                if(game.winner(game.player,x,y)):
+                    print("Mala suerte!!! jugador")
+                    return
+                if(game.gameOver()):
+                    print("Empate!!!")
+                    return
+                x,y=input("Ingresa tus coordenadas en la forma x y: ").split()
+                x=int(x)
+                y=int(y)
+                game.Mark(jugador,x,y)
+                if(game.winner(jugador,x,y)):
+                    game.show()
+                    print("Felicidades!!! jugador")
+                    return
+                if(game.gameOver()):
+                    print("Empate!!!")
+                    return
+                     
+             
